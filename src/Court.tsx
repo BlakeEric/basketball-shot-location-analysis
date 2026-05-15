@@ -1,89 +1,133 @@
 import { useEffect, useRef, useState } from "react";
+import { clamp } from "./utils/clamp";
+import {
+  COURT_X_MAX,
+  COURT_X_MIN,
+  COURT_Y_MAX,
+  COURT_Y_MIN,
+  DEFAULT_COURT_XY_FILTER,
+} from "./utils/constants";
+import type { Point, CourtRegion } from "./types";
+import { Highlight } from "./Highlight";
 
-type Point = { x: number; y: number };
+export const Court = ({
+  updateShotPositionFilter,
+}: {
+  updateShotPositionFilter: (filters: Partial<CourtRegion>) => void;
+}) => {
+  const [highlightOrigin, setHighlightOrigin] = useState<Point | undefined>(
+    undefined,
+  );
 
-export const Court = () => {
-  const [highlightOrigin, setHighlightOrigin] = useState<Point | undefined>();
-  const [highlightEnd, setHighlightEnd] = useState<Point | undefined>();
-  const [isDragging, setIsDragging] = useState(false);
-  const courtRef = useRef<HTMLDivElement | null>(null);
+  const [highlightEnd, setHighlightEnd] = useState<Point | undefined>(
+    undefined,
+  );
 
-  const getRect = () => courtRef.current!.getBoundingClientRect();
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const getRelativeXY = (clientX: number, clientY: number) => {
-    const rect = getRect();
+  const courtRef = useRef<HTMLDivElement>(null);
+
+  const getCourtDimensions = () => courtRef.current?.getBoundingClientRect();
+
+  // Given clientX/clientY and container rect (read inside), return offsets or null if no rect
+  const getRelativeXY = (clientX: number, clientY: number, rect: DOMRect) => {
+    if (!rect) return null;
+
     const pointerOffsetX = clientX - rect.left;
     const pointerOffsetY = clientY - rect.top;
+
     const normalizedX = (pointerOffsetX / rect.width) * 2 - 1;
     const normalizedY = (pointerOffsetY / rect.height) * 2 - 1;
-    const courtX = normalizedX * 47;
-    const courtY = normalizedY * 25 * -1;
-    return { courtX, courtY, pointerOffsetX, pointerOffsetY, rect };
+
+    const courtX = normalizedX * COURT_X_MAX * -1;
+    const courtY = normalizedY * COURT_Y_MAX;
+
+    return { courtX, courtY, pointerOffsetX, pointerOffsetY };
   };
 
-  const onPointerDown = (e: React.PointerEvent) => {
+  // Get X/Y position relative to container without extending outside of its boundaries
+  const calculateHighlightXY = (
+    e: React.MouseEvent | PointerEvent,
+  ): { containerPos: Point; courtPos: Point } | undefined => {
+    const courtDemensions = getCourtDimensions();
+    const originPos = getRelativeXY(e.clientX, e.clientY, courtDemensions!);
+
+    if (!originPos || !courtDemensions) {
+      return undefined;
+    }
+
+    return {
+      containerPos: {
+        x: clamp(originPos.pointerOffsetX, 0, courtDemensions.width),
+        y: clamp(originPos.pointerOffsetY, 0, courtDemensions.height),
+      },
+      courtPos: {
+        x: clamp(Math.round(originPos.courtX), COURT_X_MIN, COURT_X_MAX),
+        y: clamp(Math.round(originPos.courtY), COURT_Y_MIN, COURT_Y_MAX),
+      },
+    };
+  };
+
+  const handlePointerDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { pointerOffsetX, pointerOffsetY } = getRelativeXY(
-      e.clientX,
-      e.clientY,
-    );
-    setHighlightOrigin({ x: pointerOffsetX, y: pointerOffsetY });
-    setHighlightEnd(undefined);
+
     setIsDragging(true);
-    // capture pointer so we keep receiving events even when leaving the element
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+
+    const point = calculateHighlightXY(e);
+
+    if (!point) {
+      return;
+    }
+
+    setHighlightOrigin(point.containerPos);
+
+    updateShotPositionFilter({ start: point.courtPos, end: point.courtPos });
+
+    // clear previous end while starting a new drag
+    setHighlightEnd(undefined);
   };
 
-  const onPointerMove = (e: PointerEvent | React.PointerEvent) => {
-    if (!isDragging || !courtRef.current) return;
-    const clientX = "clientX" in e ? e.clientX : (e as PointerEvent).clientX;
-    const clientY = "clientY" in e ? e.clientY : (e as PointerEvent).clientY;
-    const { pointerOffsetX, pointerOffsetY } = getRelativeXY(clientX, clientY);
-    setHighlightEnd({ x: pointerOffsetX, y: pointerOffsetY });
+  const handlePointerMove = (e: PointerEvent) => {
+    e.preventDefault();
+
+    if (!isDragging) return;
+
+    setHighlightEnd(calculateHighlightXY(e)?.containerPos);
   };
 
-  const onPointerUp = (e: React.PointerEvent | PointerEvent) => {
-    if (!isDragging || !courtRef.current) return;
-    const clientX = "clientX" in e ? e.clientX : (e as PointerEvent).clientX;
-    const clientY = "clientY" in e ? e.clientY : (e as PointerEvent).clientY;
-    const { pointerOffsetX, pointerOffsetY } = getRelativeXY(clientX, clientY);
-    setHighlightEnd({ x: pointerOffsetX, y: pointerOffsetY });
+  const handlePointerUp = (e: PointerEvent) => {
+    e.preventDefault();
+
+    const point = calculateHighlightXY(e);
+
+    if (!isDragging || !highlightOrigin || !point) return;
+
+    setHighlightEnd(point.containerPos);
+
+    updateShotPositionFilter({ end: point.courtPos });
+
     setIsDragging(false);
-    // release capture if available
-    try {
-      (e.target as Element).releasePointerCapture?.((e as any).pointerId);
-    } catch {}
   };
 
-  // fallback: attach global pointermove/pointerup while dragging (handles pointer leaving element)
+  const reset = () => {
+    setHighlightOrigin(undefined);
+    setHighlightEnd(undefined);
+    setIsDragging(false);
+    updateShotPositionFilter(DEFAULT_COURT_XY_FILTER);
+  };
+
+  // Add dom events for mouseup/mousemove since they need to be caught outside the court container
   useEffect(() => {
     if (!isDragging) return;
-    const pm = (e: PointerEvent) => onPointerMove(e);
-    const pu = (e: PointerEvent) => onPointerUp(e);
-    window.addEventListener("pointermove", pm);
-    window.addEventListener("pointerup", pu, { once: false });
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp, { once: false });
+
     return () => {
-      window.removeEventListener("pointermove", pm);
-      window.removeEventListener("pointerup", pu);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
     };
   }, [isDragging]);
-
-  const shouldRenderHighlight = highlightOrigin && highlightEnd;
-  const highlightStyles = shouldRenderHighlight
-    ? (() => {
-        const rect = courtRef.current!.getBoundingClientRect();
-        const left = Math.min(highlightOrigin!.x, highlightEnd!.x) + rect.left;
-        const top = Math.min(highlightOrigin!.y, highlightEnd!.y) + rect.top;
-        const width = Math.abs(highlightEnd!.x - highlightOrigin!.x);
-        const height = Math.abs(highlightEnd!.y - highlightOrigin!.y);
-        return {
-          left: `${left}px`,
-          top: `${top}px`,
-          width: `${width}px`,
-          height: `${height}px`,
-        };
-      })()
-    : {};
 
   return (
     <>
@@ -95,21 +139,20 @@ export const Court = () => {
           backgroundColor: "gray",
           position: "relative",
         }}
-        onPointerDown={onPointerDown}
-        onPointerMove={(e) => onPointerMove(e)}
-        onPointerUp={(e) => onPointerUp(e)}
+        onPointerDown={handlePointerDown}
       />
-      {shouldRenderHighlight && (
-        <figure
-          className="highlight"
-          style={{
-            position: "absolute",
-            border: "1px solid black",
-            backgroundColor: "lightblue",
-            pointerEvents: "none",
-            ...highlightStyles,
-          }}
-        />
+
+      <Highlight
+        start={highlightOrigin}
+        end={highlightEnd}
+        offset={{
+          x: getCourtDimensions()?.left || 0,
+          y: getCourtDimensions()?.top || 0,
+        }}
+      />
+
+      {highlightOrigin && highlightEnd && (
+        <button onClick={reset}>Clear selection</button>
       )}
     </>
   );
