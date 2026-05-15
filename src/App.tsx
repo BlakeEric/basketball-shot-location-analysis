@@ -7,6 +7,7 @@ import type { CourtRegion } from "./types";
 import { between } from "./utils/between";
 import { Table } from "./Table";
 import { Flex, Space } from "antd";
+import { BarChart } from "./BarChart";
 
 function App() {
   const [shotPositionFilter, setShotPositionFilter] = useState(
@@ -41,16 +42,21 @@ function App() {
     });
   }, [shotPositionFilter]);
 
+  console.log(filteredRows);
   return (
     <main className="p-6">
       <Flex gap="2rem" justify="space-between">
         <section className="w-1/2">
-          <div>
-            <h1>Basketball Analysis Tool</h1>
-            <p>Highlight an area of the court to see associated shot data</p>
-          </div>
+          <Flex vertical gap="2rem">
+            <div>
+              <h1>Basketball Analysis Tool</h1>
+              <p>Highlight an area of the court to see associated shot data</p>
+            </div>
 
-          <Court updateShotPositionFilter={updateShotPositionFilter} />
+            <Court updateShotPositionFilter={updateShotPositionFilter} />
+
+            <BarChart rows={filteredRows} />
+          </Flex>
         </section>
         <section className="w-1/2">
           <Table rows={filteredRows} />
