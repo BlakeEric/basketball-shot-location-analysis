@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { DEFAULT_COURT_XY_FILTER } from "./utils/constants";
 import type { CourtRegion } from "./types";
 import { between } from "./utils/between";
+import { Table } from "./Table";
+import { Flex, Space } from "antd";
 
 function App() {
   const [shotPositionFilter, setShotPositionFilter] = useState(
@@ -31,7 +33,7 @@ function App() {
     };
   };
 
-  const filteredStuff = useMemo(() => {
+  const filteredRows = useMemo(() => {
     const { x, y } = getShotPositionMinMax(shotPositionFilter);
 
     return csvData.filter((row) => {
@@ -39,24 +41,22 @@ function App() {
     });
   }, [shotPositionFilter]);
 
-  console.log(filteredStuff);
   return (
-    <>
-      <section id="center">
-        <div className="hero"></div>
-        <div>
-          <h1>Basketball Analysis Tool</h1>
-          <p>lorem ipsum</p>
-        </div>
+    <main className="p-6">
+      <Flex gap="2rem" justify="space-between">
+        <section className="w-1/2">
+          <div>
+            <h1>Basketball Analysis Tool</h1>
+            <p>Highlight an area of the court to see associated shot data</p>
+          </div>
 
-        <Court updateShotPositionFilter={updateShotPositionFilter} />
-      </section>
-
-      <div className="ticks"></div>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+          <Court updateShotPositionFilter={updateShotPositionFilter} />
+        </section>
+        <section className="w-1/2">
+          <Table rows={filteredRows} />
+        </section>
+      </Flex>
+    </main>
   );
 }
 

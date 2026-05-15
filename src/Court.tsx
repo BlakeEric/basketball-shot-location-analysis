@@ -9,6 +9,7 @@ import {
 } from "./utils/constants";
 import type { Point, CourtRegion } from "./types";
 import { Highlight } from "./Highlight";
+import { Button } from "antd";
 
 export const Court = ({
   updateShotPositionFilter,
@@ -39,7 +40,7 @@ export const Court = ({
     const normalizedX = (pointerOffsetX / rect.width) * 2 - 1;
     const normalizedY = (pointerOffsetY / rect.height) * 2 - 1;
 
-    const courtX = normalizedX * COURT_X_MAX * -1;
+    const courtX = normalizedX * COURT_X_MAX;
     const courtY = normalizedY * COURT_Y_MAX;
 
     return { courtX, courtY, pointerOffsetX, pointerOffsetY };
@@ -132,15 +133,22 @@ export const Court = ({
   return (
     <>
       <div
-        ref={courtRef}
-        style={{
-          height: 200,
-          width: 400,
-          backgroundColor: "gray",
-          position: "relative",
-        }}
-        onPointerDown={handlePointerDown}
-      />
+        className="court-container"
+        style={{ width: "100%", paddingTop: "40%", position: "relative" }}
+      >
+        <div
+          ref={courtRef}
+          style={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            backgroundColor: "gray",
+            position: "absolute",
+          }}
+          onPointerDown={handlePointerDown}
+        />
+      </div>
 
       <Highlight
         start={highlightOrigin}
@@ -152,7 +160,9 @@ export const Court = ({
       />
 
       {highlightOrigin && highlightEnd && (
-        <button onClick={reset}>Clear selection</button>
+        <Button variant="outlined" onClick={reset}>
+          ✕ Clear selection
+        </Button>
       )}
     </>
   );
