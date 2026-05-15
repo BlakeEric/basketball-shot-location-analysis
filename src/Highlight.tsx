@@ -25,17 +25,12 @@ export const Highlight = ({ start, end, offset }: HighlightProps) => {
       className="highlight"
       style={{
         position: "absolute",
-
         border: "1px solid black",
-
         backgroundColor: "lightblue",
-
+        opacity: "50%",
         left: `${left}px`,
-
         top: `${top}px`,
-
         width: `${width}px`,
-
         height: `${height}px`,
       }}
     />

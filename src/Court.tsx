@@ -134,7 +134,7 @@ export const Court = ({
     <>
       <div
         className="court-container"
-        style={{ width: "100%", paddingTop: "40%", position: "relative" }}
+        style={{ width: "100%", paddingTop: "55%", position: "relative" }}
       >
         <div
           ref={courtRef}
@@ -147,7 +147,9 @@ export const Court = ({
             position: "absolute",
           }}
           onPointerDown={handlePointerDown}
-        />
+        >
+          <img width="100%" src="/basketball_court.jpeg" />
+        </div>
       </div>
 
       <Highlight
