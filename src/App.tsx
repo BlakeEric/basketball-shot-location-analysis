@@ -102,7 +102,6 @@ function App() {
           </Flex>
         </section>
         <section className="pt-13 overflow-visible ">
-          {/* <LineChart rows={filteredRows} /> */}
           <Card title="Shots attempted/made by shot type">
             <ShotTypeChart rows={filteredRows} />
           </Card>

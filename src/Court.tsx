@@ -149,16 +149,18 @@ export const Court = ({
             start={highlightOrigin}
             end={highlightEnd}
             offset={{ x: 0, y: 0 }}
+            showResetIcon={!!highlightOrigin && !!highlightEnd && !isDragging}
+            handleReset={reset}
           />
         </div>
 
-        {highlightOrigin && highlightEnd && (
+        {/* {highlightOrigin && highlightEnd && !isDragging && (
           <div className="absolute top-[-1.75rem] right-[-0.5rem] shadow-lg">
             <Button variant="solid" onClick={reset}>
-              ✕ Clear selection
+              ✕
             </Button>
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
