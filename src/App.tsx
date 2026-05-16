@@ -56,7 +56,9 @@ function App() {
   };
   return (
     <main className="p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-3">Shot Analysis Tool</h1>
+      <h1 className="text-3xl font-bold mb-3">
+        Shot Analysis By Court Location
+      </h1>
 
       <aside className="px-4 py-2 mb-2 border-1 border-gray-200 shadow-sm r-5 mb-3 bg-white">
         <Flex gap={"1em"} align="center" justify="space-between">
