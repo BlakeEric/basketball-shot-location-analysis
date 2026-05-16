@@ -30,10 +30,14 @@ function App() {
   const [playerFilter, setPlayerFilter] = useState<string[]>([]);
 
   const updateShotPositionFilter = (newPoint: Partial<CourtRegion>) => {
-    setShotPositionFilter((prev) => ({
-      ...prev,
-      ...newPoint,
-    }));
+    setShotPositionFilter((prev) => {
+      const newFilters = {
+        ...prev,
+        ...newPoint,
+      };
+
+      return newFilters;
+    });
   };
 
   const getShotPositionMinMax = ({ start, end }: CourtRegion) => {
@@ -64,7 +68,7 @@ function App() {
     const { x, y } = getShotPositionMinMax(shotPositionFilter);
 
     const data = csvData.filter((row) => {
-      if (!between(row.x, x.min, x.max) || !between(row.y, y.min, y.max)) {
+      if (!(between(row.x, x.min, x.max) && between(row.y, y.min, y.max))) {
         return false;
       }
       const { year, month, day } = row;
@@ -83,7 +87,7 @@ function App() {
 
       return true;
     });
-    console.log(data);
+
     return data;
   }, [shotPositionFilter, dateFilter, playerFilter]);
 

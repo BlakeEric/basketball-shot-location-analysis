@@ -100,15 +100,15 @@ export const Court = ({
     if (!isDragging || !highlightOrigin || !point) return;
 
     setHighlightEnd(point.containerPos);
+
     updateShotPositionFilter({ end: point.courtPos });
     setIsDragging(false);
   };
 
   const reset = () => {
+    updateShotPositionFilter(DEFAULT_COURT_XY_FILTER);
     setHighlightOrigin(undefined);
     setHighlightEnd(undefined);
-    setIsDragging(false);
-    updateShotPositionFilter(DEFAULT_COURT_XY_FILTER);
   };
 
   // Add dom events for mouseup/mousemove since they need to be caught outside the court container
@@ -143,24 +143,15 @@ export const Court = ({
           <span className="text-xl font-bold absolute bottom-1 left-2 cursor-default">
             &larr; Offense
           </span>
-
-          {/* Render Highlight inside the same positioned container */}
-          <Highlight
-            start={highlightOrigin}
-            end={highlightEnd}
-            offset={{ x: 0, y: 0 }}
-            showResetIcon={!!highlightOrigin && !!highlightEnd && !isDragging}
-            handleReset={reset}
-          />
         </div>
-
-        {/* {highlightOrigin && highlightEnd && !isDragging && (
-          <div className="absolute top-[-1.75rem] right-[-0.5rem] shadow-lg">
-            <Button variant="solid" onClick={reset}>
-              ✕
-            </Button>
-          </div>
-        )} */}
+        {/* Render Highlight inside the same positioned container */}
+        <Highlight
+          start={highlightOrigin}
+          end={highlightEnd}
+          offset={{ x: 0, y: 0 }}
+          showResetIcon={!!highlightOrigin && !!highlightEnd && !isDragging}
+          handleReset={reset}
+        />
       </div>
     </>
   );
