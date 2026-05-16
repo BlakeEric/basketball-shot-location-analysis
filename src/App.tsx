@@ -1,15 +1,15 @@
 import "./App.css";
 import csvData from "./shots.csv";
 import { Court } from "./Court";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_COURT_XY_FILTER } from "./utils/constants";
 import type { CourtRegion } from "./types";
-import { between } from "./utils/between";
 import { Card, DatePicker, Flex, Select, Space } from "antd";
 import { BarChart } from "./BarChart";
 import { ShotTypeChart } from "./ShotTypeChart";
 import dayjs from "dayjs";
-import { pad } from "./utils/pad";
+import { usePlayers } from "./hooks/usePlayers";
+import { useProcessedData } from "./hooks/useProcessedData";
 
 const formatDate = (date: dayjs.Dayjs | null) => {
   if (!date) return "";
@@ -19,6 +19,7 @@ const formatDate = (date: dayjs.Dayjs | null) => {
 
 function App() {
   const { RangePicker } = DatePicker;
+  const [playerFilter, setPlayerFilter] = useState<string[]>([]);
   const [shotPositionFilter, setShotPositionFilter] = useState(
     DEFAULT_COURT_XY_FILTER,
   );
@@ -27,70 +28,32 @@ function App() {
     end: string;
   } | null>(null);
 
-  const [playerFilter, setPlayerFilter] = useState<string[]>([]);
-
   const updateShotPositionFilter = (newPoint: Partial<CourtRegion>) => {
-    setShotPositionFilter((prev) => {
-      const newFilters = {
-        ...prev,
-        ...newPoint,
-      };
-
-      return newFilters;
-    });
+    setShotPositionFilter((prev) => ({
+      ...prev,
+      ...newPoint,
+    }));
   };
 
-  const getShotPositionMinMax = ({ start, end }: CourtRegion) => {
-    const sortAscending = (vals: number[]) => vals.sort((a, b) => a - b);
-    const sortedXVals = sortAscending([start.x, end.x]);
-    const sortedYVals = sortAscending([start.y, end.y]);
-    return {
-      x: { min: sortedXVals[0], max: sortedXVals[1] },
-      y: {
-        min: sortedYVals[0],
-        max: sortedYVals[1],
-      },
-    };
-  };
+  const players = usePlayers(csvData);
 
-  const playerMap: {
-    [key: string]: string;
-  } = {};
+  const filteredData = useProcessedData(csvData, {
+    shotPositionFilter,
+    playerFilter,
+    dateFilter,
+  });
 
-  for (let i = 0; i < csvData.length; i++) {
-    const { shooter_id, shooter_name } = csvData[i];
-    if (typeof playerMap[shooter_id] === "undefined") {
-      playerMap[shooter_id] = shooter_name;
+  const handleDateRangeUpdate = (value: Array<dayjs.Dayjs> | null) => {
+    if (!value) {
+      setDateFilter(null);
+      return;
     }
-  }
 
-  const filteredRows = useMemo(() => {
-    const { x, y } = getShotPositionMinMax(shotPositionFilter);
-
-    const data = csvData.filter((row) => {
-      if (!(between(row.x, x.min, x.max) && between(row.y, y.min, y.max))) {
-        return false;
-      }
-      const { year, month, day } = row;
-      const dateStr = `${year}-${pad(month, 2)}-${pad(day, 2)}`;
-
-      if (
-        dateFilter &&
-        (dateStr < dateFilter.start || dateStr > dateFilter.end)
-      ) {
-        return false;
-      }
-
-      if (playerFilter.length && !playerFilter.includes(row.shooter_id)) {
-        return false;
-      }
-
-      return true;
-    });
-
-    return data;
-  }, [shotPositionFilter, dateFilter, playerFilter]);
-
+    const [start, end] = value as Array<dayjs.Dayjs>;
+    const formattedStart = formatDate(start);
+    const formattedEnd = formatDate(end);
+    setDateFilter({ start: formattedStart, end: formattedEnd });
+  };
   return (
     <main className="p-6 bg-gray-50">
       <h1 className="text-3xl font-bold mb-3">Shot Analysis Tool</h1>
@@ -103,15 +66,7 @@ function App() {
               minDate={dayjs("2024-10-22")}
               maxDate={dayjs("2025-04-13")}
               onChange={(value) => {
-                if (!value) {
-                  setDateFilter(null);
-                  return;
-                }
-
-                const [start, end] = value as Array<dayjs.Dayjs>;
-                const formattedStart = formatDate(start);
-                const formattedEnd = formatDate(end);
-                setDateFilter({ start: formattedStart, end: formattedEnd });
+                handleDateRangeUpdate(value as Array<dayjs.Dayjs> | null);
               }}
             />
             <Select
@@ -122,12 +77,7 @@ function App() {
               onChange={(shooterIds) => {
                 setPlayerFilter(shooterIds);
               }}
-              options={Object.entries(playerMap)
-                .map(([shooter_id, shooter_name]) => ({
-                  label: shooter_name,
-                  value: shooter_id,
-                }))
-                .sort((a, b) => a.label.localeCompare(b.label))}
+              options={players}
             />
           </Space>
         </Flex>
@@ -145,14 +95,18 @@ function App() {
             </div>
             <div className="w-1/2">
               <Card title="Shots attempted/made by player">
-                <BarChart rows={filteredRows} />
+                {!!filteredData?.shotsByPlayer.length && (
+                  <BarChart data={filteredData?.shotsByPlayer} />
+                )}
               </Card>
             </div>
           </Flex>
         </section>
         <section className="pt-13 overflow-visible ">
           <Card title="Shots attempted/made by shot type">
-            <ShotTypeChart rows={filteredRows} />
+            {!!filteredData?.shotsByType.length && (
+              <ShotTypeChart data={filteredData.shotsByType} />
+            )}
           </Card>
         </section>
       </Flex>

@@ -9,7 +9,6 @@ import {
 } from "./utils/constants";
 import type { Point, CourtRegion } from "./types";
 import { Highlight } from "./Highlight";
-import { Button } from "antd";
 
 export const Court = ({
   updateShotPositionFilter,
@@ -19,15 +18,12 @@ export const Court = ({
   const [highlightOrigin, setHighlightOrigin] = useState<Point | undefined>(
     undefined,
   );
-
   const [highlightEnd, setHighlightEnd] = useState<Point | undefined>(
     undefined,
   );
-
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const courtRef = useRef<HTMLDivElement>(null);
-
   const getCourtDimensions = () => courtRef.current?.getBoundingClientRect();
 
   // Given clientX/clientY and container rect (read inside), return offsets or null if no rect
@@ -100,7 +96,6 @@ export const Court = ({
     if (!isDragging || !highlightOrigin || !point) return;
 
     setHighlightEnd(point.containerPos);
-
     updateShotPositionFilter({ end: point.courtPos });
     setIsDragging(false);
   };
@@ -144,7 +139,7 @@ export const Court = ({
             &larr; Offense
           </span>
         </div>
-        {/* Render Highlight inside the same positioned container */}
+
         <Highlight
           start={highlightOrigin}
           end={highlightEnd}
