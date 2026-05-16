@@ -5,9 +5,9 @@ import { useMemo, useState } from "react";
 import { DEFAULT_COURT_XY_FILTER } from "./utils/constants";
 import type { CourtRegion } from "./types";
 import { between } from "./utils/between";
-import { Table } from "./Table";
-import { Flex, Space } from "antd";
+import { Flex } from "antd";
 import { BarChart } from "./BarChart";
+import { ShotTypeChart } from "./ShotTypeChart";
 
 function App() {
   const [shotPositionFilter, setShotPositionFilter] = useState(
@@ -42,24 +42,36 @@ function App() {
     });
   }, [shotPositionFilter]);
 
-  console.log(filteredRows);
   return (
     <main className="p-6">
-      <Flex gap="2rem" justify="space-between">
-        <section className="w-1/2">
-          <Flex vertical gap="2rem">
-            <div>
-              <h1>Basketball Analysis Tool</h1>
-              <p>Highlight an area of the court to see associated shot data</p>
+      <h1 className="text-3xl font-bold mb-3">Basketball Analysis Tool</h1>
+      <hr />
+      <Flex gap="2rem" vertical className="w-full">
+        <section className="w-full">
+          <Flex gap="2rem" className="w-full">
+            <div className="w-1/2">
+              <div>
+                <p className="">
+                  Highlight an area of the court to see associated shot data
+                </p>
+              </div>
+
+              <Court updateShotPositionFilter={updateShotPositionFilter} />
             </div>
-
-            <Court updateShotPositionFilter={updateShotPositionFilter} />
-
-            <BarChart rows={filteredRows} />
+            <div className="w-1/2">
+              <h2 className="text-xl font-bold mb-1">
+                Shots attempted/made by player
+              </h2>
+              <BarChart rows={filteredRows} />
+            </div>
           </Flex>
         </section>
-        <section className="w-1/2">
-          <Table rows={filteredRows} />
+        <section className="pt-13 overflow-visible ">
+          {/* <LineChart rows={filteredRows} /> */}
+          <h2 className="text-xl font-bold mb-8">
+            Shots attempted/made by shot type
+          </h2>
+          <ShotTypeChart rows={filteredRows} />
         </section>
       </Flex>
     </main>

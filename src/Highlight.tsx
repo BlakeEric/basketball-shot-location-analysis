@@ -22,12 +22,9 @@ export const Highlight = ({ start, end, offset }: HighlightProps) => {
 
   return (
     <figure
-      className="highlight"
+      data-testid="highlight"
+      className="absolute bg-blue-200 opacity-50"
       style={{
-        position: "absolute",
-        border: "1px solid black",
-        backgroundColor: "lightblue",
-        opacity: "50%",
         left: `${left}px`,
         top: `${top}px`,
         width: `${width}px`,

@@ -76,14 +76,10 @@ export const Court = ({
 
     const point = calculateHighlightXY(e);
 
-    if (!point) {
-      return;
-    }
+    if (!point) return;
 
     setHighlightOrigin(point.containerPos);
-
     updateShotPositionFilter({ start: point.courtPos, end: point.courtPos });
-
     // clear previous end while starting a new drag
     setHighlightEnd(undefined);
   };
@@ -104,9 +100,7 @@ export const Court = ({
     if (!isDragging || !highlightOrigin || !point) return;
 
     setHighlightEnd(point.containerPos);
-
     updateShotPositionFilter({ end: point.courtPos });
-
     setIsDragging(false);
   };
 
@@ -134,22 +128,29 @@ export const Court = ({
     <>
       <div
         className="court-container"
-        style={{ width: "100%", paddingTop: "55%", position: "relative" }}
+        style={{ width: "100%", paddingTop: "56%", position: "relative" }}
       >
         <div
+          data-testid="court"
           ref={courtRef}
-          style={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            backgroundColor: "gray",
-            position: "absolute",
-          }}
+          className="top-0 left-0 bottom-0 right-0 absolute"
           onPointerDown={handlePointerDown}
         >
           <img width="100%" src="/basketball_court.jpeg" />
+          <span className="text-xl font-bold absolute top-1 left-2 cursor-default">
+            &larr; Offense
+          </span>
+          <span className="text-xl font-bold absolute bottom-1 left-2 cursor-default">
+            &larr; Offense
+          </span>{" "}
         </div>
+        {highlightOrigin && highlightEnd && (
+          <div className="absolute top-[-2.25rem] right-0">
+            <Button variant="solid" onClick={reset}>
+              ✕ Clear selection
+            </Button>
+          </div>
+        )}
       </div>
 
       <Highlight
@@ -160,12 +161,6 @@ export const Court = ({
           y: getCourtDimensions()?.top || 0,
         }}
       />
-
-      {highlightOrigin && highlightEnd && (
-        <Button variant="outlined" onClick={reset}>
-          ✕ Clear selection
-        </Button>
-      )}
     </>
   );
 };
