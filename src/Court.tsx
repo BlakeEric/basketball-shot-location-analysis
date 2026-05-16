@@ -142,25 +142,24 @@ export const Court = ({
           </span>
           <span className="text-xl font-bold absolute bottom-1 left-2 cursor-default">
             &larr; Offense
-          </span>{" "}
+          </span>
+
+          {/* Render Highlight inside the same positioned container */}
+          <Highlight
+            start={highlightOrigin}
+            end={highlightEnd}
+            offset={{ x: 0, y: 0 }}
+          />
         </div>
+
         {highlightOrigin && highlightEnd && (
-          <div className="absolute top-[-2.25rem] right-0">
+          <div className="absolute top-[-1.75rem] right-[-0.5rem] shadow-lg">
             <Button variant="solid" onClick={reset}>
               ✕ Clear selection
             </Button>
           </div>
         )}
       </div>
-
-      <Highlight
-        start={highlightOrigin}
-        end={highlightEnd}
-        offset={{
-          x: getCourtDimensions()?.left || 0,
-          y: getCourtDimensions()?.top || 0,
-        }}
-      />
     </>
   );
 };
