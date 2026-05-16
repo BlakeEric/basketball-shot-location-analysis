@@ -7,8 +7,6 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
-import { camelCaseToTitleCase } from "./utils/camelCaseToTitleCase";
-import type { DataRow } from "./types";
 
 type ShotTypeDataRow = {
   complex_shot_type: string;

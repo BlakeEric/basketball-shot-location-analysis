@@ -7,12 +7,14 @@ import {
   COURT_Y_MIN,
   DEFAULT_COURT_XY_FILTER,
 } from "./utils/constants";
-import type { Point, CourtRegion } from "./types";
+import type { Point, CourtRegion, CourtLocationFilter } from "./types";
 import { Highlight } from "./Highlight";
 
 export const Court = ({
+  shotPositionFilter,
   updateShotPositionFilter,
 }: {
+  shotPositionFilter: CourtLocationFilter;
   updateShotPositionFilter: (filters: Partial<CourtRegion>) => void;
 }) => {
   const [highlightOrigin, setHighlightOrigin] = useState<Point | undefined>(
@@ -25,6 +27,16 @@ export const Court = ({
 
   const courtRef = useRef<HTMLDivElement>(null);
   const getCourtDimensions = () => courtRef.current?.getBoundingClientRect();
+
+  useEffect(() => {
+    if (
+      JSON.stringify(shotPositionFilter) ===
+      JSON.stringify(DEFAULT_COURT_XY_FILTER)
+    ) {
+      setHighlightOrigin(undefined);
+      setHighlightEnd(undefined);
+    }
+  }, [shotPositionFilter]);
 
   // Given clientX/clientY and container rect (read inside), return offsets or null if no rect
   const getRelativeXY = (clientX: number, clientY: number, rect: DOMRect) => {

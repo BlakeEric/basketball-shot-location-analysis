@@ -14,6 +14,7 @@ import { ShotTypeChart } from "./ShotTypeChart";
 import dayjs from "dayjs";
 import { usePlayers } from "./hooks/usePlayers";
 import { useProcessedData } from "./hooks/useProcessedData";
+import { NoData } from "./NoData";
 
 const formatDate = (date: dayjs.Dayjs | null) => {
   if (!date) return "";
@@ -46,6 +47,12 @@ function App() {
     playerFilter,
     dateFilter,
   });
+
+  const handleResetAll = () => {
+    updateShotPositionFilter(DEFAULT_COURT_XY_FILTER);
+    setPlayerFilter([]);
+    setDateFilter(null);
+  };
 
   const handleDateRangeUpdate = (value: Array<dayjs.Dayjs> | null) => {
     if (!value) {
@@ -96,23 +103,46 @@ function App() {
                 <span className="text-lg">
                   Highlight a area of the court to filter shot data by location
                 </span>
-                <Court updateShotPositionFilter={updateShotPositionFilter} />
+                <Court
+                  shotPositionFilter={shotPositionFilter}
+                  updateShotPositionFilter={updateShotPositionFilter}
+                />
               </Card>
             </div>
             <div className="w-1/2">
               <Card title="Shots attempted/made by player">
-                {!!filteredData?.shotsByPlayer.length && (
-                  <BarChart data={filteredData?.shotsByPlayer} />
-                )}
+                <Flex
+                  align="center"
+                  justify="center"
+                  vertical
+                  style={{ minHeight: "500px" }}
+                  gap="2em"
+                >
+                  {!!filteredData?.shotsByPlayer.length ? (
+                    <BarChart data={filteredData?.shotsByPlayer} />
+                  ) : (
+                    <NoData onReset={handleResetAll} />
+                  )}
+                </Flex>
               </Card>
             </div>
           </Flex>
         </section>
         <section className="pt-13 overflow-visible ">
           <Card title="Shots attempted/made by shot type">
-            {!!filteredData?.shotsByType.length && (
-              <ShotTypeChart data={filteredData.shotsByType} />
-            )}
+            <Flex
+              vertical
+              gap="2em"
+              align="center"
+              justify="center"
+              style={{ minHeight: "500px" }}
+            >
+              {!!filteredData?.shotsByType.length ? (
+                <ShotTypeChart data={filteredData.shotsByType} />
+              ) : (
+                <NoData onReset={handleResetAll} />
+              )}
+            </Flex>
           </Card>
         </section>
       </Flex>
