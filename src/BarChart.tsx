@@ -6,7 +6,6 @@ import {
   CartesianGrid,
   Tooltip,
   Bar,
-  Label,
 } from "recharts";
 
 export const BarChart = ({ rows }: { rows: any }) => {
@@ -42,13 +41,15 @@ export const BarChart = ({ rows }: { rows: any }) => {
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="shooter_name" />
       <YAxis width="auto" />
-      <Label offset={24} position="left" angle={270} className="font-bold">
-        Shots
-      </Label>
       <Tooltip />
       <Legend />
-      <Bar dataKey="attempted" name="Shots attempted" fill="#8884d8" />
-      <Bar dataKey="success" name="Shots made" fill="#82ca9d" />
+      <Bar
+        barSize={20}
+        dataKey="attempted"
+        name="Shots attempted"
+        fill="#8884d8"
+      />
+      <Bar barSize={20} dataKey="success" name="Shots made" fill="#82ca9d" />
     </RechartsBarChart>
   );
 };

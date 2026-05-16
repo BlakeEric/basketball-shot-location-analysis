@@ -30,8 +30,8 @@ export const Highlight = ({
   const height = Math.abs(end.y - start.y);
 
   return (
-    width &&
-    height && (
+    !!width &&
+    !!height && (
       <div
         style={{
           position: "absolute",
