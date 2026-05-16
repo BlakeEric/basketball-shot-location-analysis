@@ -2,7 +2,11 @@ import "./App.css";
 import csvData from "./shots.csv";
 import { Court } from "./Court";
 import { useState } from "react";
-import { DEFAULT_COURT_XY_FILTER } from "./utils/constants";
+import {
+  DEFAULT_COURT_XY_FILTER,
+  SEASON_END_DATE,
+  SEASON_START_DATE,
+} from "./utils/constants";
 import type { CourtRegion } from "./types";
 import { Card, DatePicker, Flex, Select, Space } from "antd";
 import { BarChart } from "./BarChart";
@@ -65,8 +69,8 @@ function App() {
           <span>Filter by:</span>
           <Space>
             <RangePicker
-              minDate={dayjs("2024-10-22")}
-              maxDate={dayjs("2025-04-13")}
+              minDate={dayjs(SEASON_START_DATE)}
+              maxDate={dayjs(SEASON_END_DATE)}
               onChange={(value) => {
                 handleDateRangeUpdate(value as Array<dayjs.Dayjs> | null);
               }}
