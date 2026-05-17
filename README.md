@@ -7,16 +7,18 @@ This is a Proof of Concept for an application that analyzes basketball shot data
 Filter data by court location by clicking and dragging on an area of the court:
 IMAGE HERE
 
-Narrow results by filtering by date range and specific players
+Narrow results by date range and specific players
 IMAGE HERE
 
 ## Assumptions
 
-This Proof of Concept assumes that coaches/players already have access to the same raw spreadsheet data used in this applicataion, and therefor visual data representation is more interesting than data tables. An assumption was also made that users would want use this applications for spotting long-term trends rather than for analyzing data for a specific games.
+This Proof of Concept assumes that coaches/players/other end users want a visual data representation rather than data tables. An assumption was also made that users want to use this application for spotting long-term trends rather than analyzing data for a specific game. I also chose not to use any AI coding agents because I assume it is easier to evaluate my skills in this exercise without any AI support.
 
-Finally, it is assumed that players/coaches would not use mobile devices when using the application, so the layout is not responsive on small screens.
+Finally, it is assumed that players/coaches would not use mobile devices when using the application, as the layout is not formatted for small screens.
 
 ## Technologies
+The following tools were used with the goal of rapidly creating a prototype for client-side data visualization 
+
 * TypeScript
 * React
 * Vite
@@ -28,11 +30,12 @@ Finally, it is assumed that players/coaches would not use mobile devices when us
 
 In order to get a working example up and running quickly, this is a purely static frontend application made using react/vite and third party libraries. No unit testing was added, since this POC would likely be rewritten/replaced after its usability was validated. 
 
-Since the part I was most interested in demonstrating was the visual court location filtering, the data is imported directly from the CSV and filtered on the client. If this were a real application the data would be stored in relational database and processed via an API. In addition, to keep this initial version of the application as simple as possible, I have only chosen to display a couple metrics in the resulting charts at this point.
+Since the part I was most interested in demonstrating was the visual court location filtering, the data is imported directly from the CSV and filtered on the client. If this were a real application the data would be stored in relational database and processed via an API. To keep this initial version of the application as simple as possible, I have chosen to display a few metrics clearly rather than multiple metrics in an overwhelming dashboard.
 
 ## Potential Improvements
 
 If I was able to invest more time in this project I would:
+* conduct user testing to validate usability
 * add vitest and write tests for all components
 * move data to a relational DB and query via an API
 * Add many more filters and datapoints to the visible charts
