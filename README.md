@@ -5,10 +5,12 @@ This is a Proof of Concept for an application that analyzes basketball shot data
 
 ### Usage
 Filter data by court location by clicking and dragging on an area of the court:
-IMAGE HERE
+<img width="400" alt="clip" src="https://github.com/user-attachments/assets/68261896-b9f8-4ff5-8005-b26076356c38" />
 
 Narrow results by date range and specific players
-IMAGE HERE
+<img width="400" alt="Screenshot 2026-05-17 at 14 02 07" src="https://github.com/user-attachments/assets/c5893af2-2416-4f09-8766-f6d70d39fbc1" />
+
+
 
 ## Assumptions
 
