@@ -10,20 +10,25 @@ import {
 import type { Point, CourtRegion, CourtLocationFilter } from "../../types";
 import { Highlight } from "./Highlight";
 
-export const Court = ({
-  shotPositionFilter,
-  updateShotPositionFilter,
-}: {
+type CourtProps = {
+  isSelecting: boolean;
+  setIsSelecting: (isSelecting: boolean) => void;
   shotPositionFilter: CourtLocationFilter;
   updateShotPositionFilter: (filters: Partial<CourtRegion>) => void;
-}) => {
+};
+
+export const Court = ({
+  isSelecting,
+  setIsSelecting,
+  shotPositionFilter,
+  updateShotPositionFilter,
+}: CourtProps) => {
   const [highlightOrigin, setHighlightOrigin] = useState<Point | undefined>(
     undefined,
   );
   const [highlightEnd, setHighlightEnd] = useState<Point | undefined>(
     undefined,
   );
-  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const courtRef = useRef<HTMLDivElement>(null);
   const getCourtDimensions = () => courtRef.current?.getBoundingClientRect();
@@ -80,7 +85,7 @@ export const Court = ({
   const handlePointerDown = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    setIsDragging(true);
+    setIsSelecting(true);
 
     const point = calculateHighlightXY(e);
 
@@ -95,7 +100,7 @@ export const Court = ({
   const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault();
 
-    if (!isDragging) return;
+    if (!isSelecting) return;
 
     setHighlightEnd(calculateHighlightXY(e)?.containerPos);
   };
@@ -105,11 +110,11 @@ export const Court = ({
 
     const point = calculateHighlightXY(e);
 
-    if (!isDragging || !highlightOrigin || !point) return;
+    if (!isSelecting || !highlightOrigin || !point) return;
 
     setHighlightEnd(point.containerPos);
     updateShotPositionFilter({ end: point.courtPos });
-    setIsDragging(false);
+    setIsSelecting(false);
   };
 
   const reset = () => {
@@ -120,7 +125,7 @@ export const Court = ({
 
   // Add dom events for mouseup/mousemove since they need to be caught outside the court container
   useEffect(() => {
-    if (!isDragging) return;
+    if (!isSelecting) return;
 
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp, { once: false });
@@ -129,7 +134,7 @@ export const Court = ({
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     };
-  }, [isDragging]);
+  }, [isSelecting]);
 
   return (
     <>
@@ -156,7 +161,7 @@ export const Court = ({
           start={highlightOrigin}
           end={highlightEnd}
           offset={{ x: 0, y: 0 }}
-          showResetIcon={!!highlightOrigin && !!highlightEnd && !isDragging}
+          showResetIcon={!!highlightOrigin && !!highlightEnd && !isSelecting}
           handleReset={reset}
         />
       </div>

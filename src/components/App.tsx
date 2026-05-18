@@ -24,6 +24,7 @@ const formatDate = (date: dayjs.Dayjs | null) => {
 
 function App() {
   const { RangePicker } = DatePicker;
+  const [isSelecting, setIsSelecting] = useState<boolean>(false);
   const [playerFilter, setPlayerFilter] = useState<string[]>([]);
   const [shotPositionFilter, setShotPositionFilter] = useState(
     DEFAULT_COURT_XY_FILTER,
@@ -103,6 +104,8 @@ function App() {
               Highlight a area of the court to filter shot data by location
             </span>
             <Court
+              isSelecting={isSelecting}
+              setIsSelecting={setIsSelecting}
               shotPositionFilter={shotPositionFilter}
               updateShotPositionFilter={updateShotPositionFilter}
             />
@@ -112,6 +115,7 @@ function App() {
           <DataCard
             title="Shots attempted/made by player"
             data={filteredData?.shotsByPlayer}
+            isLoading={isSelecting}
             renderData={(data) => <PlayerChart data={data} />}
             handleReset={handleResetAll}
           />
@@ -123,6 +127,7 @@ function App() {
           <DataCard
             title="Shots attempted/made by shot type"
             data={filteredData?.shotsByType}
+            isLoading={isSelecting}
             renderData={(data) => <ShotTypeChart data={data} />}
             handleReset={handleResetAll}
           />

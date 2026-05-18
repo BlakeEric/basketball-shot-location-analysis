@@ -1,9 +1,10 @@
-import { Flex, Button, Empty, Card } from "antd";
+import { Flex, Button, Empty, Card, Spin } from "antd";
 import type { ReactNode } from "react";
 
 type DataCartProps<TData> = {
   title: string;
   handleReset: () => void;
+  isLoading: boolean;
   data: TData | undefined;
   renderData: (data: TData) => ReactNode;
 };
@@ -11,6 +12,7 @@ type DataCartProps<TData> = {
 export const DataCard = <TData extends Array<any>>({
   title,
   data,
+  isLoading,
   renderData,
   handleReset,
 }: DataCartProps<TData>) => {
@@ -23,7 +25,9 @@ export const DataCard = <TData extends Array<any>>({
         style={{ minHeight: "500px" }}
         gap="2em"
       >
-        {!data?.length ? (
+        {isLoading ? (
+          <Spin size="large" />
+        ) : !data?.length ? (
           <>
             <Empty />
             <Button onClick={handleReset}>✕ Reset filters</Button>
