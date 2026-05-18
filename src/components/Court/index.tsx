@@ -33,16 +33,6 @@ export const Court = ({
   const courtRef = useRef<HTMLDivElement>(null);
   const getCourtDimensions = () => courtRef.current?.getBoundingClientRect();
 
-  useEffect(() => {
-    if (
-      JSON.stringify(shotPositionFilter) ===
-      JSON.stringify(DEFAULT_COURT_XY_FILTER)
-    ) {
-      setHighlightOrigin(undefined);
-      setHighlightEnd(undefined);
-    }
-  }, [shotPositionFilter]);
-
   // Given clientX/clientY and container rect (read inside), return offsets or null if no rect
   const getRelativeXY = (clientX: number, clientY: number, rect: DOMRect) => {
     if (!rect) return null;
@@ -135,6 +125,17 @@ export const Court = ({
       window.removeEventListener("pointerup", handlePointerUp);
     };
   }, [isSelecting]);
+
+  // Hacky way to clear highlight if state is reset in parent
+  useEffect(() => {
+    if (
+      JSON.stringify(shotPositionFilter) ===
+      JSON.stringify(DEFAULT_COURT_XY_FILTER)
+    ) {
+      setHighlightOrigin(undefined);
+      setHighlightEnd(undefined);
+    }
+  }, [shotPositionFilter]);
 
   return (
     <>
