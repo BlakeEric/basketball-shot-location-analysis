@@ -14,7 +14,6 @@ import { ShotTypeChart } from "./ShotTypeChart";
 import dayjs from "dayjs";
 import { usePlayers } from "../hooks/usePlayers";
 import { useProcessedData } from "../hooks/useProcessedData";
-import { NoData } from "./NoData";
 import { DataCard } from "./DataCard";
 
 const formatDate = (date: dayjs.Dayjs | null) => {
