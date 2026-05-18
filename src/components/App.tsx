@@ -1,5 +1,5 @@
-import "../app.css";
-import csvData from "../shots.csv";
+import "../assets/app.css";
+import csvData from "../assets/shots.csv";
 import { Court } from "./Court";
 import { useState } from "react";
 import {
