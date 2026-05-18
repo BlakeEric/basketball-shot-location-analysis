@@ -44,4 +44,4 @@ If I was able to invest more time in this project I would:
 * move data to a relational DB and query via an API
 * Add many more filters and datapoints to the visible charts
 * Add shot success heatmap within the selected court area  
-* Add responsive styling
+* Add responsive layout for small screens
