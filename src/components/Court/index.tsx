@@ -127,6 +127,7 @@ export const Court = ({
   }, [isSelecting]);
 
   // Hacky way to clear highlight if state is reset in parent
+  // Ideal solution would be a centralized context for state handling
   useEffect(() => {
     if (
       JSON.stringify(shotPositionFilter) ===
