@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import type { Point } from "./types";
+import type { Point } from "../../types";
 
 type HighlightProps = {
   start?: Point;

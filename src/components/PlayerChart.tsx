@@ -7,31 +7,9 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
-import type { ShotsByPlayerDataRow } from "./types";
+import type { ShotsByPlayerDataRow } from "../types";
 
-export const BarChart = ({ data }: { data: ShotsByPlayerDataRow[] }) => {
-  // const processedData = rows.reduce(
-  //   (acc: Record<string, ShotsByPlayerDataRow>, curr: DataRow) => {
-  //     const id = curr.shooter_id;
-  //     if (typeof acc[id] === "undefined") {
-  //       acc[id] = {
-  //         shooter_name: curr.shooter_name,
-  //         success: 0,
-  //         attempted: 0,
-  //       };
-  //     }
-
-  //     acc[id].attempted++;
-
-  //     if (curr.outcome === "TRUE") {
-  //       acc[id].success++;
-  //     }
-
-  //     return acc;
-  //   },
-  //   {},
-  // );
-
+export const PlayerChart = ({ data }: { data: ShotsByPlayerDataRow[] }) => {
   return (
     <RechartsBarChart
       style={{

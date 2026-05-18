@@ -1,19 +1,19 @@
-import "./App.css";
-import csvData from "./shots.csv";
+import "../app.css";
+import csvData from "../shots.csv";
 import { Court } from "./Court";
 import { useState } from "react";
 import {
   DEFAULT_COURT_XY_FILTER,
   SEASON_END_DATE,
   SEASON_START_DATE,
-} from "./utils/constants";
-import type { CourtRegion } from "./types";
+} from "../utils/constants";
+import type { CourtRegion } from "../types";
 import { Card, DatePicker, Flex, Select, Space } from "antd";
-import { BarChart } from "./BarChart";
+import { PlayerChart } from "./PlayerChart";
 import { ShotTypeChart } from "./ShotTypeChart";
 import dayjs from "dayjs";
-import { usePlayers } from "./hooks/usePlayers";
-import { useProcessedData } from "./hooks/useProcessedData";
+import { usePlayers } from "../hooks/usePlayers";
+import { useProcessedData } from "../hooks/useProcessedData";
 import { NoData } from "./NoData";
 
 const formatDate = (date: dayjs.Dayjs | null) => {
@@ -119,7 +119,7 @@ function App() {
                   gap="2em"
                 >
                   {!!filteredData?.shotsByPlayer.length ? (
-                    <BarChart data={filteredData?.shotsByPlayer} />
+                    <PlayerChart data={filteredData?.shotsByPlayer} />
                   ) : (
                     <NoData onReset={handleResetAll} />
                   )}

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { clamp } from "./utils/clamp";
+import { clamp } from "../../utils/clamp";
 import {
   COURT_X_MAX,
   COURT_X_MIN,
   COURT_Y_MAX,
   COURT_Y_MIN,
   DEFAULT_COURT_XY_FILTER,
-} from "./utils/constants";
-import type { Point, CourtRegion, CourtLocationFilter } from "./types";
+} from "../../utils/constants";
+import type { Point, CourtRegion, CourtLocationFilter } from "../../types";
 import { Highlight } from "./Highlight";
 
 export const Court = ({
