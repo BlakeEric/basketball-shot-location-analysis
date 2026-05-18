@@ -8,13 +8,14 @@ import {
   SEASON_START_DATE,
 } from "../utils/constants";
 import type { CourtRegion } from "../types";
-import { Card, DatePicker, Flex, Select, Space } from "antd";
+import { Card, Col, DatePicker, Flex, Row, Select, Space } from "antd";
 import { PlayerChart } from "./PlayerChart";
 import { ShotTypeChart } from "./ShotTypeChart";
 import dayjs from "dayjs";
 import { usePlayers } from "../hooks/usePlayers";
 import { useProcessedData } from "../hooks/useProcessedData";
 import { NoData } from "./NoData";
+import { DataCard } from "./DataCard";
 
 const formatDate = (date: dayjs.Dayjs | null) => {
   if (!date) return "";
@@ -67,13 +68,13 @@ function App() {
   };
   return (
     <main className="p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-3">
+      <h1 className="text-3xl font-bold my-6">
         Shot Analysis By Court Location
       </h1>
 
-      <aside className="px-4 py-2 mb-2 border-1 border-gray-200 shadow-sm r-5 mb-3 bg-white">
+      <aside className="px-4 py-2 mb-2 border-1 border-gray-200 shadow-xs rounded-lg mb-6 bg-white">
         <Flex gap={"1em"} align="center" justify="space-between">
-          <span>Filter by:</span>
+          <span className="text-lg font-bold">Filter by:</span>
           <Space>
             <RangePicker
               minDate={dayjs(SEASON_START_DATE)}
@@ -95,57 +96,39 @@ function App() {
           </Space>
         </Flex>
       </aside>
-      <Flex vertical className="w-full">
-        <section className="w-full">
-          <Flex gap="2rem" className="w-full">
-            <div className="w-1/2">
-              <Card title="Court location">
-                <span className="text-lg">
-                  Highlight a area of the court to filter shot data by location
-                </span>
-                <Court
-                  shotPositionFilter={shotPositionFilter}
-                  updateShotPositionFilter={updateShotPositionFilter}
-                />
-              </Card>
-            </div>
-            <div className="w-1/2">
-              <Card title="Shots attempted/made by player">
-                <Flex
-                  align="center"
-                  justify="center"
-                  vertical
-                  style={{ minHeight: "500px" }}
-                  gap="2em"
-                >
-                  {!!filteredData?.shotsByPlayer.length ? (
-                    <PlayerChart data={filteredData?.shotsByPlayer} />
-                  ) : (
-                    <NoData onReset={handleResetAll} />
-                  )}
-                </Flex>
-              </Card>
-            </div>
-          </Flex>
-        </section>
-        <section className="pt-13 overflow-visible ">
-          <Card title="Shots attempted/made by shot type">
-            <Flex
-              vertical
-              gap="2em"
-              align="center"
-              justify="center"
-              style={{ minHeight: "500px" }}
-            >
-              {!!filteredData?.shotsByType.length ? (
-                <ShotTypeChart data={filteredData.shotsByType} />
-              ) : (
-                <NoData onReset={handleResetAll} />
-              )}
-            </Flex>
+
+      <Row gutter={16}>
+        <Col span={24} lg={{ span: 12 }} className="mb-6">
+          <Card title="Court location" className="h-full">
+            <span className="text-lg">
+              Highlight a area of the court to filter shot data by location
+            </span>
+            <Court
+              shotPositionFilter={shotPositionFilter}
+              updateShotPositionFilter={updateShotPositionFilter}
+            />
           </Card>
-        </section>
-      </Flex>
+        </Col>
+        <Col span={24} lg={{ span: 12 }} className="mb-6">
+          <DataCard
+            title="Shots attempted/made by player"
+            data={filteredData?.shotsByPlayer}
+            renderData={(data) => <PlayerChart data={data} />}
+            handleReset={handleResetAll}
+          />
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={24}>
+          <DataCard
+            title="Shots attempted/made by shot type"
+            data={filteredData?.shotsByType}
+            renderData={(data) => <ShotTypeChart data={data} />}
+            handleReset={handleResetAll}
+          />
+        </Col>
+      </Row>
     </main>
   );
 }
