@@ -12,7 +12,16 @@ Narrow results by date range and specific players:
 
 <img width="400" alt="Screenshot 2026-05-17 at 14 02 07" src="https://github.com/user-attachments/assets/c5893af2-2416-4f09-8766-f6d70d39fbc1" />
 
+Hover over graphs to see more detailed data:
 
+<img width="685" height="524" alt="Screenshot 2026-05-18 at 17 12 43" src="https://github.com/user-attachments/assets/325f60f7-b9bc-460c-bc68-89814c024d00" />
+
+### Running locally
+
+This application can be run locally by following the following steps:
+* Clone the repo: `git clone git@github.com:BlakeEric/basketball-shot-location-analysis.git`
+* Run `npm install` from the root directory
+* Run `npm run dev` from the root directory
 
 ## Assumptions
 
