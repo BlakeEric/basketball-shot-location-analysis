@@ -1,7 +1,7 @@
 # Basketball Shot Analysis By Court Location
 Link to live app: https://basketball-shot-location-analysis.vercel.app/
 
-This is a Proof of Concept for an application that analyzes basketball shot data by court location, providing insights into shooting patterns and efficiency, and performance across different areas of the court. The tool helps players and coaches understand where on the court shots are most effective and identify areas for improvement. Filters can be applied to focus on specific players and date ranges during a single NBA season.
+This is a Proof of Concept for an application that analyzes basketball shot data by court location, providing insights into shooting patterns and efficiency, and performance across different areas of the court. The tool helps players and coaches understand where on the court different types of shots are most effective and identify areas for improvement. Filters can be applied to focus on specific players and date ranges during a single NBA season.
 
 ### Usage
 Filter data by court location by clicking and dragging on an area of the court:
