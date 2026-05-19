@@ -1,7 +1,7 @@
 # Basketball Shot Analysis By Court Location
 Link to live app: https://basketball-shot-location-analysis.vercel.app/
 
-This is a Proof of Concept for an application that analyzes basketball shot data by court location, providing insights into shooting patterns and efficiency, and performance across different areas of the court. The tool helps players and coaches understand where on the court shots are most effective and identify areas for improvement. Filters can be applied to focus on  specific players and date ranges during a single NBA season.
+This is a Proof of Concept for an application that analyzes basketball shot data by court location, providing insights into shooting patterns and efficiency, and performance across different areas of the court. The tool helps players and coaches understand where on the court shots are most effective and identify areas for improvement. Filters can be applied to focus on specific players and date ranges during a single NBA season.
 
 ### Usage
 Filter data by court location by clicking and dragging on an area of the court:
@@ -30,24 +30,24 @@ I also chose not to use any AI coding agents because I assume it is easier to ev
 This Proof of Concept assumes that end users want interactive, visual data representation. An assumption was also made that users want to use this application for spotting long-term trends rather than analyzing data for a specific game. Finally, it is assumed that users would view the application on desktop devices rather than mobile devices.
 
 ## Technologies
-The following tools were used with the goal of rapidly creating a prototype for client-side data visualization 
+The following tools were used with the goal of rapidly creating a prototype for client-side data visualization. 
 
 * TypeScript
 * React
 * Vite
-* Tailwind (css utilities)
+* Tailwind (CSS utilities)
 * Ant Design (UI component library)
 * Recharts (chart library)
 
 ## Tradeoffs
 
-In order to get a working example up and running quickly, this is a purely static frontend application made using react/vite and third party libraries. No unit testing was added since this POC would likely be rewritten/replaced after its usability was validated. 
+In order to get a working example up and running quickly, this is a purely static frontend application made using React/Vite and third-party libraries. No unit testing was added since this POC would likely be rewritten/replaced after its usability was validated. 
 
-Since the part I was most interested in demonstrating was the visual court location filtering, the data is imported directly from the CSV and filtered on the client. If this were a real application the data would be stored in relational database and processed via an API. To keep this initial version of the application as simple as possible, I have chosen to display a few metrics clearly rather than multiple metrics in an overwhelming dashboard.
+Since the part I was most interested in demonstrating was the visual court location filtering, the data is imported directly from the CSV and filtered on the client. If this were a real application, the data would be stored in a relational database and processed via an API. To keep this initial version of the application as simple as possible, I have chosen to display a few metrics clearly rather than multiple metrics in an overwhelming dashboard.
 
 ## Potential Improvements
 
-Next steps if the dataset was much larger and this was a production app:
+Next steps if the dataset were much larger and this were a production app:
 * move data to a relational DB and query via an API
 * Add many more filters and datapoints to the visible charts
 * Add shot success heatmap within the selected court area  
