@@ -25,7 +25,7 @@ This application can be run locally by following the following steps:
 
 ## Assumptions
 
-I also chose not to use any AI coding agents because I assume it is easier to evaluate my skills in this exercise without AI support.
+I chose not to use any AI coding agents since I assume it is easier to evaluate my skills in this exercise without AI support.
 
 This Proof of Concept assumes that end users want interactive, visual data representation. An assumption was also made that users want to use this application for spotting long-term trends rather than analyzing data for a specific game. Finally, it is assumed that users would view the application on desktop devices rather than mobile devices.
 
