@@ -6,7 +6,8 @@ This is a Proof of Concept for an application that analyzes basketball shot data
 ### Usage
 Filter data by court location by clicking and dragging on an area of the court:
 
-<img width="400" alt="clip" src="https://github.com/user-attachments/assets/68261896-b9f8-4ff5-8005-b26076356c38" />
+<img width="400" alt="court selection" src="https://github.com/user-attachments/assets/a310cf39-c1a8-4e1c-999f-e9e22abed460" />
+
 
 Narrow results by date range and specific players:
 
