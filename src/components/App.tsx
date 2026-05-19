@@ -101,7 +101,7 @@ function App() {
         <Col span={24} lg={{ span: 12 }} className="mb-6">
           <Card title="Court location" className="h-full">
             <span className="text-lg">
-              Highlight a area of the court to filter shot data by location
+              Highlight an area on the court to filter shot data by location
             </span>
             <Court
               isSelecting={isSelecting}
